@@ -2,9 +2,25 @@ import requests
 from bs4 import BeautifulSoup as bs
 
 class NewsPaperData():
-    def getNewsPaper(self):  
+
+    def __init__(self):
+        self.newsPaperLinks = {
+            # Hindi
+            'NBT': "https://mystudytown.in/navbharat-times-epaper/",
+            'hindustan': "https://mystudytown.in/hindustan-dainik-epaper-pdf/",
+            'DJ': "https://mystudytown.in/dainik-jagran-epaper/",
+            'Amar': "https://mystudytown.in/amar-ujala/",
+
+            # English
+            'HT': "https://mystudytown.in/hindustan-times-epaper/",
+            'Times': "https://mystudytown.in/times-of-india-epaper-pdf/",
+            'ET': "https://mystudytown.in/the-economic-times-epaper/",
+            'Telegraph': "https://mystudytown.in/the-telegraph-epaper-pdf-free-download/"
+        }
+
+    def getNewsPaper(self, newspaperName):  
         # Make a request
-        self.r = requests.get("https://mystudytown.in/navbharat-times-epaper/")
+        self.r = requests.get(self.newsPaperLinks[newspaperName])
         self.html = self.r.text
 
         # Parse the html content
@@ -22,6 +38,7 @@ class NewsPaperData():
             for link in Alltd[1].find_all('a'):
                 dic[Alltd[0].text] = link.get('href')
 
+        print(dic)
         # Return News Paper Date and Link in Dictionary Format
         return dic
 
@@ -33,9 +50,10 @@ class NewsPaperData():
     def getPDF(self, url):
         r = requests.get(url)
         soup = bs(r.text, "lxml")
+        title = soup.find('title').text
+        if(title == "त्रुटि | वीके" or title == "Error | VK"):
+            return "Error"
+        
         iframeSource = soup.find("iframe", attrs={"id": "iframe"})['src']
         print(iframeSource)
         return iframeSource
-
-obj = NewsPaperData()
-obj.getPDF("https://vk.com/doc722551386_632706138?hash=HCd9nq5EiMDYoXkdoyHTJ9Zxji5prQ9hN9HumXFPdLw&dl=nEkMaa09bRlzTgugEcWmczVIoj161Cc4WzzkVto4IVs")

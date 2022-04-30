@@ -15,9 +15,9 @@ async def home():
     response = RedirectResponse(url='/docs')
     return response
 
-@app.get("/getnewspaper")
-async def NewsPaper():
-    data = newsPaperAPI.getNewsPaper()
+@app.get("/getnewspaper/{name}")
+async def NewsPaper(name: str):
+    data = newsPaperAPI.getNewsPaper(name)
     return data
 
 @app.post("/getpdf")
