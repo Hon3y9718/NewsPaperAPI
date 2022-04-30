@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from ScrapNewsPaper import NewsPaperData
 
@@ -10,11 +11,16 @@ newsPaperAPI = NewsPaperData()
 app = FastAPI()
 
 @app.get("/")
-async def root():
+async def home():
+    response = RedirectResponse(url='/docs')
+    return response
+
+@app.get("/getnewspaper")
+async def NewsPaper():
     data = newsPaperAPI.getNewsPaper()
     return data
 
 @app.post("/getpdf")
-async def root(url: URL):
+async def pdf(url: URL):
     data = newsPaperAPI.getPDF(url.url)
     return {'url': data}
