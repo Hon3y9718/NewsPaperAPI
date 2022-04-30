@@ -29,14 +29,20 @@ class NewsPaperData():
         # Find out table
         table = soup.find('table', attrs={"data-ninja_table_instance": "ninja_table_instance_0"})
 
-        dic = {}
+        dic = []
 
         # Loop and find out date and Link from Table
         for row in range(0, 8):
             tableTr = table.tbody.find("tr", attrs={"data-row_id": f'{row}'})
             Alltd = tableTr.find_all("td")
             for link in Alltd[1].find_all('a'):
-                dic[Alltd[0].text] = link.get('href')
+                # dic[Alltd[0].text] = link.get('href')
+                obj = {
+                    'date': Alltd[0].text,
+                    'link': link.get('href')
+                }
+
+                dic.append(obj)
 
         print(dic)
         # Return News Paper Date and Link in Dictionary Format
